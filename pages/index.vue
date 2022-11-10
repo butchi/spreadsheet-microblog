@@ -11,3 +11,15 @@ const { data: sheetData } = await useFetch(sheetUrl)
         <p>index page</p>
     </main>
 </template>
+
+<script>
+import Papa from "papaparse"
+
+export default {
+    computed: {
+        postArr() {
+            return Papa.parse(this.sheetData).data.slice(1)
+        },
+    },
+}
+</script>
