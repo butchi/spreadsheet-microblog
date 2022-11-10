@@ -14,6 +14,7 @@ const { data: sheetData } = await useFetch(sheetUrl)
 
 <script>
 import Papa from "papaparse"
+import { DateTime } from "luxon"
 
 export default {
     computed: {
