@@ -9,4 +9,7 @@ export default defineNuxtConfig({
             "process.env.DEBUG": false,
         },
     },
+    publicRuntimeConfig: {
+        sheetUrl: process.env.SHEET_URL,
+    },
 })
