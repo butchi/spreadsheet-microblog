@@ -1,7 +1,7 @@
 <template>
     <main>
         <v-row justify="center">
-            <v-col lg="2" md="3">
+            <v-col class="ma-3" lg="2" md="3">
                 <v-list density="compact">
                     <v-list-subheader>
                         Spreadsheet Microblog Demo
@@ -18,7 +18,8 @@
 
                 <v-btn class="mt-5" color="primary" rounded block @click="isOpenDialog = true">つぶやく</v-btn>
 
-                <v-select class="mt-15" v-model="curUserSlug" :items="userLi" item-title="name" item-value="slug">
+                <v-select class="mt-5" v-model="curUser" :items="userArr" item-title="name" item-value="slug"
+                    :hint="`${curUser.slug && '@' + curUser.slug}`" label="ユーザー" persistent-hint return-object>
                 </v-select>
 
                 <v-dialog v-model="isOpenDialog" width="640" height="439">
@@ -26,8 +27,8 @@
                         marginheight="0" marginwidth="0">読み込んでいます…</iframe>
                 </v-dialog>
             </v-col>
-            <v-col md="5">
-                <v-card class="mt-3" v-for="post in postArr.slice().reverse()" :key="`${post.authorId} ${post.date}`">
+            <v-col cols="12" md="5">
+                <v-card class="ma-3" v-for="post in postArrDesc" :key="`${post.authorId} ${post.date}`">
                     <v-list-item class="w-100" three-line>
                         <template v-slot:prepend>
                             <v-avatar v-if="post.authorImg" :image="post.authorImg"></v-avatar>
@@ -76,7 +77,7 @@ import { DateTime } from "luxon"
 export default {
     data: () => ({
         isOpenDialog: false,
-        curUserSlug: "anonymous",
+        curUser: { name: "", slug: "" },
         userArr: [],
         postArr: [],
         menuItemArr: [
@@ -100,14 +101,10 @@ export default {
         defaultName: "匿名",
     }),
     computed: {
-        curUser() {
-            return this.userArr.filter(user => user.slug === this.curUserSlug)[0]
-        },
-        userLi() {
-            return this.userArr.map(user => ({
-                slug: user.slug,
-                name: user.name,
-            }))
+        postArrDesc() {
+            const timeValue = dateStr => DateTime.fromFormat(dateStr, "yyyy/MM/dd hh:mm:ss").valueOf()
+
+            return this.postArr.slice().sort((a, b) => timeValue(a.date) - timeValue(b.date)).reverse()
         },
     },
     methods: {
@@ -128,6 +125,8 @@ export default {
         const userCsvTxt = await res.text()
 
         this.userArr = Papa.parse(userCsvTxt).data.slice(1).map(([date, slug, name, sheetUrl, formUrl, img]) => ({ date, slug, name, sheetUrl, formUrl, img }))
+
+        this.curUser = Object.assign({}, this.userArr.filter(user => user.slug === "anonymous")[0])
 
         this.userArr.forEach(user => {
             fetch(user.sheetUrl).then(res => {
