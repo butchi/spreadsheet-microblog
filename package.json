@@ -8,6 +8,14 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "nuxt": "3.0.0-rc.13"
+    "nuxt": "3.0.0-rc.13",
+    "sass": "^1.56.1"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "luxon": "^3.1.0",
+    "mdi": "^2.2.43",
+    "papaparse": "^5.3.2",
+    "vuetify": "^3.0.0"
   }
 }
