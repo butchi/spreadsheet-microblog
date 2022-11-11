@@ -128,19 +128,21 @@ export default {
 
         this.curUser = Object.assign({}, this.userArr.filter(user => user.slug === "anonymous")[0])
 
-        this.userArr.forEach(user => {
-            fetch(user.sheetUrl).then(res => {
-                res.text().then(postCsvTxt => {
-                    const authorSlug = user.slug
-                    const authorName = user.name
-                    const authorImg = user.img
+        this.postArr = (await Promise.all(
+            this.userArr.map(async user => {
+                const res = await fetch(user.sheetUrl)
 
-                    const arr = Papa.parse(postCsvTxt).data.slice(1).map(([date, text]) => ({ authorSlug, authorName, authorImg, date, text }))
+                const postCsvTxt = await res.text()
 
-                    this.postArr = this.postArr.concat(arr)
-                })
+                const authorSlug = user.slug
+                const authorName = user.name
+                const authorImg = user.img
+
+                const arr = Papa.parse(postCsvTxt).data.slice(1).map(([date, text]) => ({ authorSlug, authorName, authorImg, date, text }))
+
+                return arr
             })
-        })
+        )).flat()
     },
 }
 </script>
