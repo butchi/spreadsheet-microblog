@@ -65,7 +65,7 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-            <v-col md="3"></v-col>
+            <v-col md="3">{{ message }}</v-col>
         </v-row>
     </main>
 </template>
@@ -76,6 +76,9 @@ import { DateTime } from "luxon"
 
 export default {
     data: () => ({
+        //dev
+        message: "aaa",
+
         isOpenDialog: false,
         curUser: { name: "", slug: "" },
         userArr: [],
@@ -120,6 +123,8 @@ export default {
         }
     },
     async mounted() {
+        this.message = await (await fetch("/.netlify/functions/hello")).text()
+
         const res = await fetch(this.$config.sheetUrl)
 
         const userCsvTxt = await res.text()
