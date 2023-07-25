@@ -25,6 +25,7 @@ export default defineNuxtConfig({
         },
     },
     publicRuntimeConfig: {
-        sheetUrl: process.env.SHEET_URL,
+        masterSheetUrl: process.env.MASTER_SHEET_URL,
+        formAlice: process.env.FORM_ALICE
     },
 })
